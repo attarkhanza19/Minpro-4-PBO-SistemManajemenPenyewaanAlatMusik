@@ -1,7 +1,7 @@
 package Minpro3;
 
 import java.util.Scanner;
-import Minpro3.Controller.PenyewaanController;
+import Minpro3.controller.PenyewaanController;
 import Minpro3.Model.AlatMusik;
 import Minpro3.Model.AlatMusikAkustik;
 import Minpro3.Model.AlatMusikElektrik;

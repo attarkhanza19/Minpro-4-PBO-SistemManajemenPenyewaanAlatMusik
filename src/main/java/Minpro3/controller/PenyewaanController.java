@@ -1,104 +1,39 @@
-package Minpro3.Controller;
+
+package Minpro3.controller;
 
 import java.util.ArrayList;
-import Minpro3.Model.*;
+
+import Minpro3.dao.AlatMusikDAO;
+import Minpro3.dao.PelangganDAO;
+import Minpro3.dao.PenyewaanDAO;
+
+import Minpro3.Model.AlatMusik;
+import Minpro3.Model.DapatDitampilkan;
+import Minpro3.Model.Pelanggan;
+import Minpro3.Model.Penyewaan;
 
 public class PenyewaanController {
 
-    private ArrayList<AlatMusik> daftarAlat;
-    private ArrayList<Pelanggan> daftarPelanggan;
-    private ArrayList<Penyewaan> daftarPenyewaan;
+    private final AlatMusikDAO alatDAO;
+    private final PelangganDAO pelangganDAO;
+    private final PenyewaanDAO penyewaanDAO;
 
     public PenyewaanController() {
-
-        daftarAlat = new ArrayList<>();
-        daftarPelanggan = new ArrayList<>();
-        daftarPenyewaan = new ArrayList<>();
-
-        daftarAlat.add(new AlatMusikAkustik(
-                "GTR-001",
-                "Gitar Akustik",
-                "Gitar",
-                100000,
-                "Disewa",
-                "Kayu"
-        ));
-
-        daftarAlat.add(new AlatMusikElektrik(
-                "KBD-001",
-                "Keyboard",
-                "Keyboard",
-                150000,
-                "Disewa",
-                220
-        ));
-
-        daftarAlat.add(new AlatMusikAkustik(
-                "DRM-001",
-                "Drum Akustik",
-                "Drum",
-                200000,
-                "Ready",
-                "Kayu"
-        ));
-
-        daftarAlat.add(new AlatMusikElektrik(
-                "GTR-002",
-                "Gitar Elektrik",
-                "Gitar",
-                175000,
-                "Ready",
-                220
-        ));
-
-        daftarPelanggan.add(new Pelanggan(
-                "PLN-001",
-                "Dilan",
-                "08882293918",
-                "Samarinda"
-        ));
-
-        daftarPelanggan.add(new Pelanggan(
-                "PLN-002",
-                "Ibrah",
-                "081234567890",
-                "Samarinda"
-        ));
-
-        daftarPelanggan.add(new Pelanggan(
-                "PLN-003",
-                "Rizky",
-                "082345678901",
-                "Balikpapan"
-        ));
-
-        daftarPenyewaan.add(new Penyewaan(
-                "SW-001",
-                "PLN-001",
-                "GTR-001",
-                2,
-                200000
-        ));
-
-        daftarPenyewaan.add(new Penyewaan(
-                "SW-002",
-                "PLN-002",
-                "KBD-001",
-                3,
-                450000
-        ));
+        alatDAO = new AlatMusikDAO();
+        pelangganDAO = new PelangganDAO();
+        penyewaanDAO = new PenyewaanDAO();
     }
 
     public ArrayList<AlatMusik> getDaftarAlat() {
-        return daftarAlat;
+        return alatDAO.getAll();
     }
 
     public ArrayList<Pelanggan> getDaftarPelanggan() {
-        return daftarPelanggan;
+        return pelangganDAO.getAll();
     }
 
     public ArrayList<Penyewaan> getDaftarPenyewaan() {
-        return daftarPenyewaan;
+        return penyewaanDAO.getAll();
     }
 
     public boolean tambahAlat(AlatMusik alat) {
@@ -111,9 +46,7 @@ public class PenyewaanController {
             return false;
         }
 
-        daftarAlat.add(alat);
-
-        return true;
+        return alatDAO.tambah(alat);
     }
 
     public boolean ubahAlat(
@@ -129,27 +62,30 @@ public class PenyewaanController {
             return false;
         }
 
+        if (nama == null || nama.trim().isEmpty()
+                || jenis == null || jenis.trim().isEmpty()
+                || harga <= 0
+                || status == null
+                || status.trim().isEmpty()) {
+            return false;
+        }
+
         alat.setNamaAlat(nama);
         alat.setJenisAlat(jenis);
         alat.setHargaSewa(harga);
         alat.setStatus(status);
 
-        return true;
+        return alatDAO.ubah(alat);
     }
 
     public boolean hapusAlat(String id) {
 
-        AlatMusik alat = cariAlat(id);
-
-        if (alat == null) {
+        if (cariAlat(id) == null) {
             return false;
         }
 
-        daftarAlat.remove(alat);
-
-        return true;
+        return alatDAO.hapus(id);
     }
-
 
     public boolean tambahPelanggan(Pelanggan pelanggan) {
 
@@ -161,9 +97,7 @@ public class PenyewaanController {
             return false;
         }
 
-        daftarPelanggan.add(pelanggan);
-
-        return true;
+        return pelangganDAO.tambah(pelanggan);
     }
 
     public boolean ubahPelanggan(
@@ -178,24 +112,26 @@ public class PenyewaanController {
             return false;
         }
 
+        if (nama == null || nama.trim().isEmpty()
+                || noTelepon == null || noTelepon.trim().isEmpty()
+                || alamat == null || alamat.trim().isEmpty()) {
+            return false;
+        }
+
         pelanggan.setNamaPelanggan(nama);
         pelanggan.setNoTelepon(noTelepon);
         pelanggan.setAlamat(alamat);
 
-        return true;
+        return pelangganDAO.ubah(pelanggan);
     }
 
     public boolean hapusPelanggan(String id) {
 
-        Pelanggan pelanggan = cariPelanggan(id);
-
-        if (pelanggan == null) {
+        if (cariPelanggan(id) == null) {
             return false;
         }
 
-        daftarPelanggan.remove(pelanggan);
-
-        return true;
+        return pelangganDAO.hapus(id);
     }
 
     public boolean tambahPenyewaan(
@@ -219,6 +155,10 @@ public class PenyewaanController {
             String idAlat,
             int lamaSewa,
             double diskon) {
+
+        if (idPenyewaan == null || idPenyewaan.trim().isEmpty()) {
+            return false;
+        }
 
         if (cariPenyewaan(idPenyewaan) != null) {
             return false;
@@ -246,14 +186,11 @@ public class PenyewaanController {
         double totalHarga;
 
         if (diskon == 0) {
-
             totalHarga = alat.hitungTotal(
                     alat.getHargaSewa(),
                     lamaSewa
             );
-
         } else {
-
             totalHarga = alat.hitungTotal(
                     alat.getHargaSewa(),
                     lamaSewa,
@@ -269,9 +206,18 @@ public class PenyewaanController {
                 totalHarga
         );
 
-        daftarPenyewaan.add(penyewaan);
+        if (!penyewaanDAO.tambah(penyewaan, diskon)) {
+            return false;
+        }
 
         alat.setStatus("Disewa");
+
+        if (!alatDAO.ubah(alat)) {
+            System.out.println(
+                    "Penyewaan tersimpan, tetapi status alat "
+                    + "gagal diperbarui."
+            );
+        }
 
         return true;
     }
@@ -299,23 +245,16 @@ public class PenyewaanController {
             return false;
         }
 
-        if (!penyewaan.getIdAlat().equalsIgnoreCase(idAlat)) {
+        String idAlatLama = penyewaan.getIdAlat();
+        boolean gantiAlat =
+                !idAlatLama.equalsIgnoreCase(idAlat);
 
-            if (!alatBaru.getStatus().equalsIgnoreCase("Ready")) {
-                return false;
-            }
-
-            AlatMusik alatLama =
-                    cariAlat(penyewaan.getIdAlat());
-
-            if (alatLama != null) {
-                alatLama.setStatus("Ready");
-            }
-
-            alatBaru.setStatus("Disewa");
-
-            penyewaan.setIdAlat(idAlat);
+        if (gantiAlat
+                && !alatBaru.getStatus().equalsIgnoreCase("Ready")) {
+            return false;
         }
+
+        AlatMusik alatLama = cariAlat(idAlatLama);
 
         double totalHarga = alatBaru.hitungTotal(
                 alatBaru.getHargaSewa(),
@@ -323,8 +262,23 @@ public class PenyewaanController {
         );
 
         penyewaan.setIdPelanggan(idPelanggan);
+        penyewaan.setIdAlat(idAlat);
         penyewaan.setLamaSewa(lamaSewa);
         penyewaan.setTotalHarga(totalHarga);
+
+        if (!penyewaanDAO.ubah(penyewaan)) {
+            return false;
+        }
+
+        if (gantiAlat) {
+            if (alatLama != null) {
+                alatLama.setStatus("Ready");
+                alatDAO.ubah(alatLama);
+            }
+
+            alatBaru.setStatus("Disewa");
+            alatDAO.ubah(alatBaru);
+        }
 
         return true;
     }
@@ -337,21 +291,25 @@ public class PenyewaanController {
             return false;
         }
 
-        AlatMusik alat =
-                cariAlat(penyewaan.getIdAlat());
+        if (!penyewaanDAO.hapus(id)) {
+            return false;
+        }
+
+        AlatMusik alat = cariAlat(penyewaan.getIdAlat());
 
         if (alat != null) {
             alat.setStatus("Ready");
+            alatDAO.ubah(alat);
         }
-
-        daftarPenyewaan.remove(penyewaan);
 
         return true;
     }
-    
-            public void lihatAlat() {
+
+    public void lihatAlat() {
 
         System.out.println("\n===== DAFTAR ALAT MUSIK =====");
+
+        ArrayList<AlatMusik> daftarAlat = getDaftarAlat();
 
         if (daftarAlat.isEmpty()) {
             System.out.println("Belum ada data alat musik.");
@@ -359,8 +317,11 @@ public class PenyewaanController {
         }
 
         for (AlatMusik alat : daftarAlat) {
-            DapatDitampilkan data = (DapatDitampilkan) alat;
-            data.tampilkanData();
+            if (alat instanceof DapatDitampilkan) {
+                DapatDitampilkan data = (DapatDitampilkan) alat;
+                data.tampilkanData();
+            }
+
             System.out.println("----------------------------");
         }
     }
@@ -368,6 +329,8 @@ public class PenyewaanController {
     public void lihatPelanggan() {
 
         System.out.println("\n===== DAFTAR PELANGGAN =====");
+
+        ArrayList<Pelanggan> daftarPelanggan = getDaftarPelanggan();
 
         if (daftarPelanggan.isEmpty()) {
             System.out.println("Belum ada data pelanggan.");
@@ -384,6 +347,8 @@ public class PenyewaanController {
 
         System.out.println("\n===== DAFTAR PENYEWAAN =====");
 
+        ArrayList<Penyewaan> daftarPenyewaan = getDaftarPenyewaan();
+
         if (daftarPenyewaan.isEmpty()) {
             System.out.println("Belum ada data penyewaan.");
             return;
@@ -395,11 +360,13 @@ public class PenyewaanController {
         }
     }
 
-
     public AlatMusik cariAlat(String id) {
 
-        for (AlatMusik alat : daftarAlat) {
+        if (id == null) {
+            return null;
+        }
 
+        for (AlatMusik alat : alatDAO.getAll()) {
             if (alat.getIdAlat().equalsIgnoreCase(id)) {
                 return alat;
             }
@@ -410,29 +377,19 @@ public class PenyewaanController {
 
     public Pelanggan cariPelanggan(String id) {
 
-        for (Pelanggan pelanggan : daftarPelanggan) {
-
-            if (pelanggan.getIdPelanggan()
-                    .equalsIgnoreCase(id)) {
-
-                return pelanggan;
-            }
+        if (id == null) {
+            return null;
         }
 
-        return null;
+        return pelangganDAO.cariById(id);
     }
 
     public Penyewaan cariPenyewaan(String id) {
 
-        for (Penyewaan penyewaan : daftarPenyewaan) {
-
-            if (penyewaan.getIdPenyewaan()
-                    .equalsIgnoreCase(id)) {
-
-                return penyewaan;
-            }
+        if (id == null) {
+            return null;
         }
 
-        return null;
+        return penyewaanDAO.cariById(id);
     }
 }
