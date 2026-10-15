@@ -1,18 +1,27 @@
-# MINI PROJECT 3 PBO MUHAMMAD ATTAR KHANZA HABIBILLAH (2509116006)
+# MINI PROJECT 4 PBO MUHAMMAD ATTAR KHANZA HABIBILLAH (2509116006)
 ## Sistem Manajemen Penyewaan Alat Musik
 ### Deskripsi singkat program
-Program Sistem Penyewaan Alat Musik merupakan program berbasis Java yang digunakan untuk mengelola data alat musik, pelanggan, dan transaksi penyewaan. Program menyediakan fitur tambah, lihat, ubah, dan hapus (CRUD) pada setiap data. Program juga dapat menghitung total biaya penyewaan berdasarkan harga alat dan lama penyewaan. Implementasi program menggunakan class, object, constructor, ArrayList, percabangan, dan perulangan.
+Program Sistem Penyewaan Alat Musik merupakan program berbasis Java yang digunakan untuk mengelola data alat musik, pelanggan, dan transaksi penyewaan. Program menyediakan fitur tambah, lihat, ubah, dan hapus (CRUD) pada setiap data. Program juga dapat menghitung total biaya penyewaan berdasarkan harga alat, lama penyewaan, dan diskon. Implementasi program menggunakan class, object, constructor, ArrayList, percabangan, dan perulangan. Pada pengembangan ini, program juga diintegrasikan dengan database MySQL menggunakan JDBC dan PreparedStatement untuk menyimpan, mengambil, mengubah, serta menghapus data secara langsung dari database.
 ### Class apa aja yang ada di dalam program?
-Didalam program **Sistem Manajemen Penyewaan Alat Musik**, ada 4 class:
-1. Minpro3penyewaanalatmusik (main) adalah class entry point menjalankan program, menampilkan menu, menerima input, dan menjalankan proses CRUD.
-2. AlatMusik sebagai penyimpan data alat musik yang disewakan, seperti ID, nama, jenis, harga sewa, dan status.
-3. AlatMusikAkustik sebagai subclass dari AlatMusik yang menyimpan data tambahan alat musik akustik, yaitu bahan alat musik.
-4. AlatMusikElektrik sebagai subclass dari AlatMusik yang menyimpan data tambahan alat musik elektrik, yaitu daya alat dalam Watt.
-5. Pelanggan sebagai penyimpan data pelanggan yang melakukan penyewaan.
-6. Penyewaan sebagai penyimpan data transaksi penyewaan, seperti ID penyewaan, pelanggan, alat, lama sewa, dan total harga.
-7. MenuView sebagai bagian View dalam MVC yang menangani tampilan menu, input pengguna, serta pesan yang ditampilkan kepada pengguna.
-8. PenyewaanController sebagai bagian Controller dalam MVC yang menangani proses dan logika program, seperti CRUD, validasi data, pencarian data, dan proses penyewaan.
-9. DapatDitampilkan merupakan interface, bukan class, yang mendefinisikan method tampilkanData(). Interface ini diterapkan pada class AlatMusikAkustik dan AlatMusikElektrik sebagai nilai tambah dalam program.
+## Class dan Interface dalam Program
+
+Di dalam program **Sistem Manajemen Penyewaan Alat Musik**, terdapat beberapa class dan interface dengan fungsi masing-masing, yaitu:
+
+1. **Minpro3penyewaanalatmusik (Main)** merupakan class entry point untuk menjalankan program.
+2. **AlatMusik** merupakan superclass yang menyimpan data alat musik, seperti ID, nama, jenis, harga sewa, dan status.
+3. **AlatMusikAkustik** merupakan subclass dari AlatMusik yang menyimpan data tambahan alat musik akustik, yaitu bahan alat musik.
+4. **AlatMusikElektrik** merupakan subclass dari AlatMusik yang menyimpan data tambahan alat musik elektrik, yaitu daya alat dalam Watt.
+5. **Pelanggan** merupakan class yang menyimpan data pelanggan yang melakukan penyewaan.
+6. **Penyewaan** merupakan class yang menyimpan data transaksi penyewaan, seperti ID penyewaan, pelanggan, alat, lama sewa, dan total harga.
+7. **MenuView** merupakan bagian View dalam konsep MVC yang menangani tampilan menu, input pengguna, serta pesan yang ditampilkan kepada pengguna.
+8. **PenyewaanController** merupakan bagian Controller dalam konsep MVC yang menangani proses dan logika program, seperti CRUD, validasi data, pencarian data, dan proses penyewaan.
+9. **DapatDitampilkan** merupakan interface yang mendefinisikan method `tampilkanData()`. Interface ini diterapkan pada class AlatMusikAkustik dan AlatMusikElektrik sebagai penerapan polymorphism.
+10. **DatabaseConnection** merupakan class yang mengatur koneksi antara program Java dan database MySQL menggunakan JDBC.
+11. **AlatMusikDAO** merupakan class yang menangani operasi CRUD data alat musik pada database MySQL.
+12. **PelangganDAO** merupakan class yang menangani operasi CRUD data pelanggan pada database MySQL.
+13. **PenyewaanDAO** merupakan class yang menangani operasi CRUD data transaksi penyewaan pada database MySQL.
+
+Class DAO menggunakan `PreparedStatement` untuk menjalankan perintah SQL, seperti menambahkan, mengambil, mengubah, dan menghapus data. Dengan demikian, data program dapat disimpan secara permanen di database MySQL.
 
 ### Alur Perencanaan Program
 Alur program dimulai ketika program dijalankan melalui class Minpro2penyewaanalatmusik.java. Program akan menampilkan menu utama yang berisi beberapa pilihan, yaitu Kelola Data Alat Musik, Kelola Data Pelanggan, Kelola Data Penyewaan, dan Keluar.
@@ -84,6 +93,20 @@ Alur setiap menu:
 15. Interface
 
     Program menerapkan interface DapatDitampilkan yang digunakan untuk menentukan method tampilkanData() pada class yang mengimplementasikannya.
+
+16. Integrasi Database MySQL
+
+    Program menggunakan MySQL sebagai tempat penyimpanan data secara permanen. Koneksi antara Java dan MySQL dilakukan menggunakan JDBC dengan bantuan class
+    DatabaseConnection.
+    Program menggunakan PreparedStatement untuk menjalankan perintah SQL, seperti SELECT, INSERT, UPDATE, dan DELETE. Penggunaan PreparedStatement juga membantu
+    menangani parameter input dengan lebih aman dibandingkan menyusun query menggunakan penggabungan string secara langsung.
+
+17. Data Access Object (DAO)
+
+    Program menggunakan pola Data Access Object (DAO) untuk memisahkan proses akses database dari logika utama program. Terdapat tiga class DAO, yaitu
+    AlatMusikDAO, PelangganDAO, dan PenyewaanDAO.
+    Setiap DAO bertanggung jawab mengelola data pada tabel yang sesuai. Dengan pemisahan ini, controller dapat menjalankan proses program tanpa harus menuliskan
+    seluruh perintah SQL secara langsung.
 
 ### Dokumentasi Alur Program
 1. Tampilan Menu Utama
@@ -706,3 +729,102 @@ public class AlatMusikAkustik extends AlatMusik implements DapatDitampilkan {
 }
 ```
 Pada contoh tersebut, AlatMusikAkustik menggunakan implements DapatDitampilkan, sehingga class tersebut menerapkan method tampilkanData() yang didefinisikan oleh interface. Dengan penerapan ini, Interface membantu membuat struktur program lebih teratur dan memberikan aturan method yang harus tersedia pada class yang menggunakannya.
+
+### Penjelasan Penerapan JDBC dan Integrasi Database MySQL
+
+#### Koneksi Database
+
+Program menggunakan JDBC untuk menghubungkan aplikasi Java dengan database MySQL. Koneksi diatur melalui class DatabaseConnection menggunakan DriverManager.getConnection() dengan URL database, username, dan password yang sesuai.
+```
+package Minpro3.Database;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DatabaseConnection {
+
+    private static final String URL =
+            "jdbc:mysql://localhost:3306/db_penyewaan_alat_musik";
+
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
+
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
+}
+```
+
+#### Pengelolaan Data Menggunakan DAO
+
+Operasi database dipisahkan ke dalam class Data Access Object (DAO), yaitu AlatMusikDAO, PelangganDAO, dan PenyewaanDAO. Setiap DAO menggunakan PreparedStatement untuk menjalankan query SQL seperti SELECT, INSERT, UPDATE, dan DELETE.
+```
+public boolean tambah(AlatMusik alat) {
+
+    String sql = "INSERT INTO alat_musik "
+            + "(id_alat, nama_alat, jenis_alat, harga_sewa, "
+            + "status, bahan, daya) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, alat.getIdAlat());
+        ps.setString(2, alat.getNamaAlat());
+        ps.setString(3, alat.getJenisAlat());
+        ps.setDouble(4, alat.getHargaSewa());
+        ps.setString(5, alat.getStatus());
+
+        if (alat instanceof AlatMusikAkustik) {
+            AlatMusikAkustik akustik = (AlatMusikAkustik) alat;
+
+            ps.setString(6, akustik.getBahan());
+            ps.setNull(7, Types.INTEGER);
+
+        } else if (alat instanceof AlatMusikElektrik) {
+            AlatMusikElektrik elektrik = (AlatMusikElektrik) alat;
+
+            ps.setNull(6, Types.VARCHAR);
+            ps.setInt(7, elektrik.getDaya());
+
+        } else {
+            throw new SQLException("Jenis alat musik tidak dikenali.");
+        }
+
+        return ps.executeUpdate() > 0;
+
+    } catch (SQLException e) {
+        System.out.println("Gagal menambah alat: " + e.getMessage());
+        return false;
+    }
+}
+```
+
+#### Pengujian Integrasi Database
+
+Integrasi diuji dengan menambahkan data melalui program Java, kemudian memeriksa tabel terkait pada phpMyAdmin. Data yang berhasil tersimpan menunjukkan bahwa program dapat menjalankan operasi database melalui JDBC.
+```
+===== TAMBAH ALAT MUSIK =====
+ID Alat: DRM-001
+Nama Alat: Drum Elektrik Besar Banar
+Jenis Alat: Drum
+Harga Sewa: 150000
+
+Jenis Alat:
+1. Akustik
+2. Elektrik
+Pilih jenis: 2
+Daya (Watt): 220
+Data alat berhasil ditambahkan.
+```
+Data akan ditambahkan kedalam database yang terintegrasi dengan Java
+```
+mysql> select * from alat_musik;
++---------+---------------------------+------------+------------+--------+-------+------+
+| id_alat | nama_alat                 | jenis_alat | harga_sewa | status | bahan | daya |
++---------+---------------------------+------------+------------+--------+-------+------+
+| DRM-001 | Drum Elektrik Besar Banar | Drum       |     150000 | Ready  | NULL  |  220 |
+| GTR-001 | Gitar Akustik             | Gitar      |     100000 | Ready  | Kayu  | NULL |
+| KBD-001 | Keyboard                  | Keyboard   |     150000 | Ready  | NULL  |  220 |
++---------+---------------------------+------------+------------+--------+-------+------+
+```
